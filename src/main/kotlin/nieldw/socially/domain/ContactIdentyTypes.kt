@@ -1,6 +1,10 @@
 package nieldw.socially.domain
 
-data class ContactId(private val id: String)
+import java.util.*
+
+data class ContactId(private val id: UUID) {
+    constructor() : this(UUID.randomUUID())
+}
 
 data class FirstName(private val name: String)
 data class LastName(private val name: String)

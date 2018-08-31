@@ -23,15 +23,17 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<kotlin.version>1.2.51</kotlin.version>
+        <axon.version>3.2.2</axon.version>
         <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-	</properties>
+        <shazamcrest.version>0.11</shazamcrest.version>
+    </properties>
 
 	<dependencies>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>3.2.2</version>
+            <version>${axon.version}</version>
         </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -63,6 +65,11 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-test</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -85,6 +92,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.shazam</groupId>
+            <artifactId>shazamcrest</artifactId>
+            <version>${shazamcrest.version}</version>
         </dependency>
 	</dependencies>
 

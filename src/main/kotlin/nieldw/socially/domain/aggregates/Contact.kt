@@ -1,6 +1,7 @@
 package nieldw.socially.domain.aggregates
 
 import nieldw.socially.domain.BasicInfo
+import nieldw.socially.domain.ContactId
 import nieldw.socially.domain.commands.AddContactCommand
 import nieldw.socially.domain.events.ContactAddedEvent
 import nieldw.socially.domain.events.PlatformContactAddedEvent
@@ -15,18 +16,19 @@ import org.axonframework.spring.stereotype.Aggregate
 class Contact() {
 
     @AggregateIdentifier
-    private lateinit var contactId: String
+    private lateinit var contactId: ContactId
     private lateinit var basicInfo: BasicInfo
     private val platformContacts = mutableListOf<PlatformContact>()
 
     @CommandHandler
     constructor(command: AddContactCommand) : this() {
-        apply(ContactAddedEvent(command.contactId, command.basicInfo))
+        apply(ContactAddedEvent(ContactId(), command.basicInfo))
         command.platformContacts.forEach { apply(PlatformContactAddedEvent(it)) }
     }
 
     @EventSourcingHandler
     fun handle(contactAddedEvent: ContactAddedEvent) {
+        this.contactId = contactAddedEvent.contactId
         this.basicInfo = contactAddedEvent.basicInfo
     }
 
