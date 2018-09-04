@@ -27,6 +27,7 @@
         <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <shazamcrest.version>0.11</shazamcrest.version>
+        <mockk.version>1.8.7</mockk.version>
     </properties>
 
 	<dependencies>
@@ -98,6 +99,12 @@
             <artifactId>shazamcrest</artifactId>
             <version>${shazamcrest.version}</version>
         </dependency>
+		<dependency>
+			<groupId>io.mockk</groupId>
+			<artifactId>mockk</artifactId>
+			<version>${mockk.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

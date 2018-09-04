@@ -8,9 +8,9 @@ import nieldw.socially.domain.events.PlatformContactAddedEvent
 import nieldw.socially.domain.platform.PlatformContact
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
-import org.axonframework.commandhandling.model.AggregateLifecycle.apply
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.spring.stereotype.Aggregate
+import org.axonframework.commandhandling.model.AggregateLifecycle.apply as applyEvent
 
 @Aggregate
 class Contact() {
@@ -22,8 +22,8 @@ class Contact() {
 
     @CommandHandler
     constructor(command: AddContactCommand) : this() {
-        apply(ContactAddedEvent(ContactId(), command.basicInfo))
-        command.platformContacts.forEach { apply(PlatformContactAddedEvent(it)) }
+        applyEvent(ContactAddedEvent(ContactId(), command.basicInfo))
+        command.platformContacts.forEach { applyEvent(PlatformContactAddedEvent(it)) }
     }
 
     @EventSourcingHandler
