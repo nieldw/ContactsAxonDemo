@@ -2,9 +2,12 @@ package nieldw.socially.domain.aggregates
 
 import nieldw.socially.domain.BasicInfo
 import nieldw.socially.domain.ContactId
+import nieldw.socially.domain.RelationshipLevel
 import nieldw.socially.domain.commands.AddContactCommand
+import nieldw.socially.domain.commands.UpdateRelationshipLevelCommand
 import nieldw.socially.domain.events.ContactAddedEvent
 import nieldw.socially.domain.events.PlatformContactAddedEvent
+import nieldw.socially.domain.events.RelationshipLevelUpdatedEvent
 import nieldw.socially.domain.platform.PlatformContact
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.commandhandling.model.AggregateIdentifier
@@ -18,6 +21,7 @@ class Contact() {
     @AggregateIdentifier
     private lateinit var contactId: ContactId
     private lateinit var basicInfo: BasicInfo
+    private lateinit var relationshipLevel: RelationshipLevel
     private val platformContacts = mutableListOf<PlatformContact>()
 
     @CommandHandler
@@ -27,13 +31,24 @@ class Contact() {
     }
 
     @EventSourcingHandler
-    fun handle(contactAddedEvent: ContactAddedEvent) {
-        this.contactId = contactAddedEvent.contactId
-        this.basicInfo = contactAddedEvent.basicInfo
+    fun handle(event: ContactAddedEvent) {
+        this.contactId = event.contactId
+        this.basicInfo = event.basicInfo
     }
 
     @EventSourcingHandler
-    fun handle(platformContactAddedEvent: PlatformContactAddedEvent) {
-        this.platformContacts.add(platformContactAddedEvent.platformContact)
+    fun handle(event: PlatformContactAddedEvent) {
+        this.platformContacts.add(event.platformContact)
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateRelationshipLevelCommand): RelationshipLevel {
+        applyEvent(RelationshipLevelUpdatedEvent(contactId, command.relationshipLevel))
+        return command.relationshipLevel
+    }
+
+    @EventSourcingHandler
+    fun handle(event: RelationshipLevelUpdatedEvent) {
+        this.relationshipLevel = event.newRelationshipLevel
     }
 }
