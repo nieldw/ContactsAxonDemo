@@ -42,6 +42,6 @@ internal class AddInteractionCommandTest {
                 .expectEventsMatching(payloadsMatching(exactSequenceOf(
                         sameBeanAs(InteractionAddedEvent(InteractionId(), contactId, facebookContact, expectedScore))
                                 .with("interactionId", validInteractionId))))
-                .expectReturnValueMatching(validInteractionId)
+                .expectResultMessagePayloadMatching(validInteractionId)
     }
 }

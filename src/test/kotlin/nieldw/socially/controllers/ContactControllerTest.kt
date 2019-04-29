@@ -8,7 +8,10 @@ import nieldw.socially.domain.LastName
 import nieldw.socially.domain.commands.AddContactCommand
 import nieldw.socially.web.rest.ContactDTO
 import org.axonframework.commandhandling.CommandCallback
+import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.common.Registration
+import org.axonframework.messaging.MessageDispatchInterceptor
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
@@ -37,11 +40,15 @@ internal class ContactControllerTest {
                 throw UnsupportedOperationException("not implemented")
             }
 
-            override fun <C : Any?, R : Any?> send(command: C, callback: CommandCallback<in C, R>?) {
+            override fun <C : Any?, R : Any?> send(command: C, callback: CommandCallback<in C, in R>?) {
                 throw UnsupportedOperationException("not implemented")
             }
 
             override fun <R : Any?> send(command: Any?): CompletableFuture<R> {
+                throw UnsupportedOperationException("not implemented")
+            }
+
+            override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in CommandMessage<*>>?): Registration {
                 throw UnsupportedOperationException("not implemented")
             }
         }

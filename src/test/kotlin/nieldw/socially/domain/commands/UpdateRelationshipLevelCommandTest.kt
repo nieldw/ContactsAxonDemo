@@ -28,6 +28,6 @@ internal class UpdateRelationshipLevelCommandTest {
                 .andGiven(ContactAddedEvent(contactId, basicInfo))
                 .`when`(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ASSOCIATE))
                 .expectEvents(expectedEvent)
-                .expectReturnValue(RelationshipLevel.ASSOCIATE)
+                .expectResultMessagePayload(RelationshipLevel.ASSOCIATE)
     }
 }

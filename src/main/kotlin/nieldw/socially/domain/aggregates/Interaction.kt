@@ -5,10 +5,10 @@ import nieldw.socially.domain.commands.AddInteractionCommand
 import nieldw.socially.domain.events.InteractionAddedEvent
 import nieldw.socially.domain.services.InteractionScoreCalculator
 import org.axonframework.commandhandling.CommandHandler
-import org.axonframework.commandhandling.model.AggregateIdentifier
 import org.axonframework.eventsourcing.EventSourcingHandler
+import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.spring.stereotype.Aggregate
-import org.axonframework.commandhandling.model.AggregateLifecycle.apply as applyEvent
+import org.axonframework.modelling.command.AggregateLifecycle.apply as applyEvent
 
 @Aggregate
 class Interaction() {

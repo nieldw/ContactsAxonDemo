@@ -34,7 +34,7 @@ class AddContactCommandTest {
                 .expectEventsMatching(payloadsMatching(exactSequenceOf(
                         sameBeanAs(expectedEvent)
                                 .with("contactId", validContactId))))
-                .expectReturnValueMatching(validContactId)
+                .expectResultMessagePayloadMatching(validContactId)
     }
 
     @Test
@@ -55,6 +55,6 @@ class AddContactCommandTest {
                 .expectEventsMatching(listWithAllOf(
                         messageWithPayload(sameBeanAs(firstExpectedPlatformContactAddedEvent)),
                         messageWithPayload(sameBeanAs(secondExpectedPlatformContactAddedEvent))))
-                .expectReturnValueMatching(validContactId)
+                .expectResultMessagePayloadMatching(validContactId)
     }
 }
