@@ -1,0 +1,53 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.3.31'
+}
+
+repositories {
+    jcenter()
+}
+
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation 'org.axonframework:axon-spring-boot-starter:4.1.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.1.4.RELEASE'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.axonframework:axon-test:4.1.1'
+    implementation 'com.shazam:shazamcrest:0.11'
+    runtime 'com.h2database:h2:1.4.199'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+    testImplementation 'io.mockk:mockk:1.9.3'
+}
+
+group = 'nieldw'
+version = '0.0.1-SNAPSHOT'
+description = 'socially'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        apiVersion = '1.3'
+        languageVersion = '1.3'
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        apiVersion = '1.3'
+        languageVersion = '1.3'
+    }
+}

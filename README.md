@@ -8,4 +8,4 @@ that avoids common pitfalls and supports maintainability.
 Although this project was created with Spring Boot, it has no public endpoints. All the behaviour of the different domain
 components have been verified with unit tests, mostly using Axon's test fixtures.
 
-To start the tests, do `$ ./mvnw test`.
+To start the tests, do `$ ./gradlew test`.
