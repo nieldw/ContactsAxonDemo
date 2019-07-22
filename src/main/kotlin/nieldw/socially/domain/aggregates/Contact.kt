@@ -26,7 +26,7 @@ class Contact() {
 
     @CommandHandler
     constructor(command: AddContactCommand) : this() {
-        applyEvent(ContactAddedEvent(ContactId(), command.basicInfo))
+        applyEvent(ContactAddedEvent(command.contactId, command.basicInfo))
         command.platformContacts.forEach { applyEvent(PlatformContactAddedEvent(it)) }
     }
 

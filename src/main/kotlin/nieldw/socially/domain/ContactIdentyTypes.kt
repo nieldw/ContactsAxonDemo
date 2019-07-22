@@ -17,4 +17,5 @@ data class FirstName(private val name: String) {
 data class LastName(private val name: String) {
     override fun toString() = name
 }
+
 data class BasicInfo(val firstName: FirstName, val lastName: LastName)

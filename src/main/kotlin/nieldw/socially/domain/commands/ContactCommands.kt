@@ -8,9 +8,12 @@ import nieldw.socially.domain.platform.PlatformContact
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class AddContactCommand(
-    val basicInfo: BasicInfo,
-    val platformContacts: List<PlatformContact> = emptyList()
-)
+        val basicInfo: BasicInfo,
+        val platformContacts: List<PlatformContact> = emptyList()
+) {
+    @TargetAggregateIdentifier
+    val contactId: ContactId = ContactId()
+}
 
 data class UpdateRelationshipLevelCommand(
         @TargetAggregateIdentifier val contactId: ContactId,

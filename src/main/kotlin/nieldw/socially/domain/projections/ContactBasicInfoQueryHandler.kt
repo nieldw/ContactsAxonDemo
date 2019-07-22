@@ -1,8 +1,5 @@
 package nieldw.socially.domain.projections
 
-import nieldw.socially.domain.BasicInfo
-import nieldw.socially.domain.FirstName
-import nieldw.socially.domain.LastName
 import nieldw.socially.domain.events.ContactAddedEvent
 import nieldw.socially.domain.queries.BasicInfoQuery
 import org.axonframework.eventhandling.EventHandler
@@ -25,8 +22,8 @@ internal class ContactBasicInfoQueryHandler(private val repo: ContactBasicInfoRe
     }
 
     @QueryHandler
-    fun findBasicInfo(query: BasicInfoQuery): Optional<BasicInfo> {
+    fun findBasicInfo(query: BasicInfoQuery): BasicInfoProjection {
         return repo.findById(query.contactId.toUUID())
-                .map { BasicInfo(FirstName(it.firstName), LastName(it.lastName)) }
+                .orElseThrow { UnknownContactException("ContactId ${query.contactId} not recognised") }
     }
 }

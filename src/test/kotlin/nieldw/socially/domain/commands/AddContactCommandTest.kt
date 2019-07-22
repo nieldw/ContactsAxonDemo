@@ -9,7 +9,6 @@ import nieldw.socially.domain.platform.EmailContact
 import nieldw.socially.domain.platform.FacebookContact
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.matchers.Matchers.*
-import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -25,16 +24,14 @@ class AddContactCommandTest {
     @Test
     fun `it should add basic info`() {
         val basicInfo = BasicInfo(FirstName("Samwise"), LastName("Gamgee"))
-        val expectedEvent = ContactAddedEvent(ContactId(), basicInfo)
-        val validContactId = Matchers.instanceOf<ContactId>(ContactId::class.java)
-
         val addContactCommand = AddContactCommand(basicInfo)
+        val expectedEvent = ContactAddedEvent(addContactCommand.contactId, basicInfo)
+
         fixture.givenNoPriorActivity()
                 .`when`(addContactCommand)
                 .expectEventsMatching(payloadsMatching(exactSequenceOf(
-                        sameBeanAs(expectedEvent)
-                                .with("contactId", validContactId))))
-                .expectResultMessagePayloadMatching(validContactId)
+                        sameBeanAs(expectedEvent))))
+                .expectResultMessagePayload(addContactCommand.contactId)
     }
 
     @Test
@@ -42,19 +39,18 @@ class AddContactCommandTest {
         val basicInfo = BasicInfo(FirstName("Samwise"), LastName("Gamgee"))
         val facebookContact = FacebookContact(Username("sam.gee"), basicInfo)
         val emailContact = EmailContact(EmailAddress("sam@bagend.me"))
-        val expectedContactAddedEvent = ContactAddedEvent(ContactId(), basicInfo)
+        val addContactCommand = AddContactCommand(basicInfo, listOf(facebookContact, emailContact))
+        val expectedContactAddedEvent = ContactAddedEvent(addContactCommand.contactId, basicInfo)
         val firstExpectedPlatformContactAddedEvent = PlatformContactAddedEvent(facebookContact)
         val secondExpectedPlatformContactAddedEvent = PlatformContactAddedEvent(emailContact)
-        val validContactId = Matchers.instanceOf<ContactId>(ContactId::class.java)
 
-        val addContactCommand = AddContactCommand(basicInfo, listOf(facebookContact, emailContact))
         fixture.givenNoPriorActivity()
                 .`when`(addContactCommand)
                 .expectEventsMatching(listWithAllOf(
-                        messageWithPayload(sameBeanAs(expectedContactAddedEvent).ignoring(ContactId::class.java))))
+                        messageWithPayload(sameBeanAs(expectedContactAddedEvent))))
                 .expectEventsMatching(listWithAllOf(
                         messageWithPayload(sameBeanAs(firstExpectedPlatformContactAddedEvent)),
                         messageWithPayload(sameBeanAs(secondExpectedPlatformContactAddedEvent))))
-                .expectResultMessagePayloadMatching(validContactId)
+                .expectResultMessagePayload(addContactCommand.contactId)
     }
 }

@@ -1,57 +1,48 @@
 package nieldw.socially.controllers
 
-import com.shazam.shazamcrest.MatcherAssert.assertThat
 import com.shazam.shazamcrest.matcher.Matchers.sameBeanAs
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import nieldw.socially.domain.BasicInfo
+import nieldw.socially.domain.ContactId
 import nieldw.socially.domain.FirstName
 import nieldw.socially.domain.LastName
 import nieldw.socially.domain.commands.AddContactCommand
+import nieldw.socially.domain.projections.BasicInfoProjection
+import nieldw.socially.domain.queries.BasicInfoQuery
 import nieldw.socially.web.rest.ContactDTO
-import org.axonframework.commandhandling.CommandCallback
-import org.axonframework.commandhandling.CommandMessage
+import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.axonframework.common.Registration
-import org.axonframework.messaging.MessageDispatchInterceptor
-import org.hamcrest.Matchers.`is`
+import org.axonframework.queryhandling.QueryGateway
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.CompletableFuture.completedFuture
 
 internal class ContactControllerTest {
+    private val commandGateway = mockk<CommandGateway>()
+    private val queryGateway = mockk<QueryGateway>()
+    private val contactController = ContactController(commandGateway, queryGateway)
 
     @Test
     fun `addContact should pass a correctly formed command to the gateway`() {
-        var actualCommand: AddContactCommand? = null
-        val contactController = buildContactControllerSUT { command -> actualCommand = command as AddContactCommand }
-        contactController.addContact(ContactDTO("Peregrin", "Took"))
-        assertThat(actualCommand,
-                `is`(sameBeanAs(AddContactCommand(BasicInfo(FirstName("Peregrin"), LastName("Took"))))))
+        val expectedNewContactId = ContactId()
+        every { commandGateway.sendAndWait<ContactId>(any<AddContactCommand>()) } returns expectedNewContactId
+
+        val actualContactId = contactController.addContact(ContactDTO("Peregrin", "Took"))
+
+        val expectedCommand = sameBeanAs(AddContactCommand(BasicInfo(FirstName("Peregrin"), LastName("Took"))))::matches
+        verify { commandGateway.sendAndWait(match(expectedCommand)) }
+        assertThat(actualContactId).isEqualTo(expectedNewContactId)
     }
 
-    private fun buildContactControllerSUT(capturingFunction: (command: Any) -> Unit): ContactController {
-        val commandGateway = object : CommandGateway {
-            override fun <R : Any?> sendAndWait(command: Any?): R {
-                capturingFunction(command ?: fail { "Command should not be null" })
-                return Any() as R
-            }
+    @Test
+    fun `getByContactId should return query result`() {
+        val contactId = ContactId()
+        val expectedBasicInfoProjection = BasicInfoProjection(contactId, FirstName("Dain"), LastName("Ironfoot"))
 
-            override fun <R : Any?> sendAndWait(command: Any?, timeout: Long, unit: TimeUnit?): R {
-                throw UnsupportedOperationException("not implemented")
-            }
+        every { queryGateway.query(any<BasicInfoQuery>(), any<Class<BasicInfoProjection>>()) } returns completedFuture(expectedBasicInfoProjection)
 
-            override fun <C : Any?, R : Any?> send(command: C, callback: CommandCallback<in C, in R>?) {
-                throw UnsupportedOperationException("not implemented")
-            }
-
-            override fun <R : Any?> send(command: Any?): CompletableFuture<R> {
-                throw UnsupportedOperationException("not implemented")
-            }
-
-            override fun registerDispatchInterceptor(interceptor: MessageDispatchInterceptor<in CommandMessage<*>>?): Registration {
-                throw UnsupportedOperationException("not implemented")
-            }
-        }
-        return ContactController(commandGateway)
+        val basicInfoProjection = contactController.getContactById(contactId)
+        assertThat(basicInfoProjection).isEqualTo(expectedBasicInfoProjection)
     }
 }
