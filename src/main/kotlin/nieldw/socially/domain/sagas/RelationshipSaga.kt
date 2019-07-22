@@ -17,21 +17,21 @@ class RelationshipSaga {
     @Autowired
     private lateinit var commandGateway: CommandGateway
 
-    private var relationshipInteractionScore = InteractionScore(0)
+    private var relationshipInteractionScore = InteractionScore.NONE
 
     @StartSaga
     @SagaEventHandler(associationProperty = "contactId")
     fun handle(interactionAddedEvent: InteractionAddedEvent) {
-        if (this.relationshipInteractionScore == InteractionScore(0)) {
+        if (this.relationshipInteractionScore == InteractionScore.NONE) {
             this.commandGateway.send<UpdateRelationshipLevelCommand>(
-                    UpdateRelationshipLevelCommand(interactionAddedEvent.contactId, RelationshipLevel.ACQUAINTANCE))
+                    UpdateRelationshipLevelCommand(interactionAddedEvent.contactId, RelationshipLevel.ACQUAINTANCE, interactionAddedEvent.interactionScore))
         }
 
         this.relationshipInteractionScore += interactionAddedEvent.interactionScore
         when {
             this.relationshipInteractionScore >= InteractionScore(10) ->
                 this.commandGateway.send<UpdateRelationshipLevelCommand>(
-                        UpdateRelationshipLevelCommand(interactionAddedEvent.contactId, RelationshipLevel.ASSOCIATE))
+                        UpdateRelationshipLevelCommand(interactionAddedEvent.contactId, RelationshipLevel.ASSOCIATE, this.relationshipInteractionScore))
         }
     }
 }

@@ -7,7 +7,12 @@ data class InteractionId(private val id: UUID) {
 }
 
 data class InteractionScore(private val score: Long) : Comparable<InteractionScore> {
+    companion object {
+        val NONE get() = InteractionScore(0)
+    }
+
     operator fun plus(rhs: InteractionScore): InteractionScore = InteractionScore(this.score + rhs.score)
 
     override operator fun compareTo(other: InteractionScore): Int = this.score.compareTo(other.score)
+    fun toLong() = score
 }

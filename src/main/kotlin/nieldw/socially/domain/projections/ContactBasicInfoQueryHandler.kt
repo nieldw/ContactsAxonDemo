@@ -12,10 +12,10 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
-interface ContactBasicInfoRepo : CrudRepository<BasicInfoProjection, UUID>
+internal interface ContactBasicInfoRepo : CrudRepository<BasicInfoProjection, UUID>
 
 @Repository
-class ContactBasicInfoQueryHandler(private val repo: ContactBasicInfoRepo) {
+internal class ContactBasicInfoQueryHandler(private val repo: ContactBasicInfoRepo) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @EventHandler

@@ -2,6 +2,7 @@ package nieldw.socially.domain.commands
 
 import nieldw.socially.domain.BasicInfo
 import nieldw.socially.domain.ContactId
+import nieldw.socially.domain.InteractionScore
 import nieldw.socially.domain.RelationshipLevel
 import nieldw.socially.domain.platform.PlatformContact
 import org.axonframework.modelling.command.TargetAggregateIdentifier
@@ -13,5 +14,6 @@ data class AddContactCommand(
 
 data class UpdateRelationshipLevelCommand(
         @TargetAggregateIdentifier val contactId: ContactId,
-        val relationshipLevel: RelationshipLevel
+        val relationshipLevel: RelationshipLevel,
+        val currentInteractionScore: InteractionScore
 )

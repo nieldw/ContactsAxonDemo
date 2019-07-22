@@ -21,12 +21,12 @@ internal class UpdateRelationshipLevelCommandTest {
     fun `it should update contact relationship level`() {
         val basicInfo = BasicInfo(FirstName("Samwise"), LastName("Gamgee"))
         val contactId = ContactId()
-        val expectedEvent = RelationshipLevelUpdatedEvent(contactId, RelationshipLevel.ASSOCIATE)
+        val expectedEvent = RelationshipLevelUpdatedEvent(contactId, RelationshipLevel.ASSOCIATE, InteractionScore(2))
 
         fixture
                 .givenNoPriorActivity()
                 .andGiven(ContactAddedEvent(contactId, basicInfo))
-                .`when`(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ASSOCIATE))
+                .`when`(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ASSOCIATE, InteractionScore(2)))
                 .expectEvents(expectedEvent)
                 .expectResultMessagePayload(RelationshipLevel.ASSOCIATE)
     }

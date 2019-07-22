@@ -43,7 +43,7 @@ class Contact() {
 
     @CommandHandler
     fun handle(command: UpdateRelationshipLevelCommand): RelationshipLevel {
-        applyEvent(RelationshipLevelUpdatedEvent(contactId, command.relationshipLevel))
+        applyEvent(RelationshipLevelUpdatedEvent(contactId, command.relationshipLevel, command.currentInteractionScore))
         return command.relationshipLevel
     }
 

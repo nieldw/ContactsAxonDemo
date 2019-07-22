@@ -26,7 +26,7 @@ internal class RelationshipSagaTest {
                 .givenNoPriorActivity()
                 .whenPublishingA(InteractionAddedEvent(InteractionId(), contactId, aragornEmail, InteractionScore(3)))
                 .expectActiveSagas(1)
-                .expectDispatchedCommands(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ACQUAINTANCE))
+                .expectDispatchedCommands(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ACQUAINTANCE, InteractionScore(3)))
     }
 
     @Test
@@ -39,6 +39,6 @@ internal class RelationshipSagaTest {
                 .andThenAPublished(InteractionAddedEvent(InteractionId(), contactId, aragornEmail, InteractionScore(3)))
                 .whenPublishingA(InteractionAddedEvent(InteractionId(), contactId, aragornTelephone, InteractionScore(5)))
                 .expectActiveSagas(1)
-                .expectDispatchedCommands(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ASSOCIATE))
+                .expectDispatchedCommands(UpdateRelationshipLevelCommand(contactId, RelationshipLevel.ASSOCIATE, InteractionScore(11)))
     }
 }
