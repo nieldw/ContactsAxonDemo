@@ -42,7 +42,8 @@ internal class TopRelationshipBasicInfoQueryHandler(private val repo: ContactRel
     }
 
     @QueryHandler
-    fun findTopRelationship(query: TopRelationshipBasicInfoQuery): Optional<ContactRelationshipLevelProjection> {
+    fun findTopRelationship(query: TopRelationshipBasicInfoQuery): ContactRelationshipLevelProjection {
         return repo.findTopByOrderByInteractionScoreDesc()
+                .orElseThrow { UnknownContactException("No contacts were found") }
     }
 }

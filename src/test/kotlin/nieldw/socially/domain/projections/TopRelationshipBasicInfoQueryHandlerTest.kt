@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import kotlin.test.assertFailsWith
 
 @DataJpaTest
 internal class TopRelationshipBasicInfoQueryHandlerTest {
@@ -19,10 +20,9 @@ internal class TopRelationshipBasicInfoQueryHandlerTest {
     fun `a new contact has no interaction score`() {
         val event = ContactAddedEvent(ContactId(), BasicInfo(FirstName("Aragorn"), LastName("Elessar")))
         handler.handle(event)
-        val optional = handler.findTopRelationship(TopRelationshipBasicInfoQuery())
+        val newContact = handler.findTopRelationship(TopRelationshipBasicInfoQuery())
 
-        assertThat(optional).isNotEmpty
-        assertThat(optional).hasValue(ContactRelationshipLevelProjection(
+        assertThat(newContact).isEqualTo(ContactRelationshipLevelProjection(
                 event.contactId.toUUID(),
                 event.basicInfo.firstName.toString(),
                 event.basicInfo.lastName.toString(),
@@ -39,13 +39,20 @@ internal class TopRelationshipBasicInfoQueryHandlerTest {
         handler.handle(ContactAddedEvent(ContactId(), BasicInfo(FirstName("Durin"), LastName("Deathless"))))
         handler.handle(RelationshipLevelUpdatedEvent(expectedContactId, RelationshipLevel.ACQUAINTANCE, InteractionScore(5)))
 
-        val optional = handler.findTopRelationship(TopRelationshipBasicInfoQuery())
-        assertThat(optional).hasValue(ContactRelationshipLevelProjection(
+        val contact = handler.findTopRelationship(TopRelationshipBasicInfoQuery())
+        assertThat(contact).isEqualTo(ContactRelationshipLevelProjection(
                 expectedContactId.toUUID(),
                 expectedBasicInfo.firstName.toString(),
                 expectedBasicInfo.lastName.toString(),
                 RelationshipLevel.ACQUAINTANCE,
                 5
         ))
+    }
+
+    @Test
+    fun `findTopRelationship should throw exception if no contacts exist`() {
+        assertFailsWith<UnknownContactException> {
+            handler.findTopRelationship(TopRelationshipBasicInfoQuery())
+        }
     }
 }
