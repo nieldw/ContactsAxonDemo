@@ -19,7 +19,7 @@ class Interaction() {
     @CommandHandler
     constructor(addInteractionCommand: AddInteractionCommand, interactionScoreCalculator: InteractionScoreCalculator) : this() {
         applyEvent(InteractionAddedEvent(
-                InteractionId(),
+                addInteractionCommand.interactionId,
                 addInteractionCommand.contactId,
                 addInteractionCommand.platformContact,
                 interactionScoreCalculator.calculateScore(addInteractionCommand.platformContact)

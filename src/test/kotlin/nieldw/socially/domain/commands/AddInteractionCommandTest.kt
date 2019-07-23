@@ -11,7 +11,6 @@ import nieldw.socially.domain.services.InteractionScoreCalculator
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.matchers.Matchers.exactSequenceOf
 import org.axonframework.test.matchers.Matchers.payloadsMatching
-import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -29,7 +28,8 @@ internal class AddInteractionCommandTest {
         val contactId = ContactId()
         val basicInfo = BasicInfo(FirstName("Samwise"), LastName("Gamgee"))
         val facebookContact = FacebookContact(Username("sam.gee"), basicInfo)
-        val validInteractionId = Matchers.instanceOf<InteractionId>(InteractionId::class.java)
+        val addInteractionCommand = AddInteractionCommand(contactId, facebookContact)
+        val interactionId = addInteractionCommand.interactionId
 
         val calculator: InteractionScoreCalculator = mockk()
         val expectedScore = InteractionScore(4)
@@ -38,10 +38,9 @@ internal class AddInteractionCommandTest {
         fixture
                 .registerInjectableResource(calculator)
                 .givenNoPriorActivity()
-                .`when`(AddInteractionCommand(contactId, facebookContact))
+                .`when`(addInteractionCommand)
                 .expectEventsMatching(payloadsMatching(exactSequenceOf(
-                        sameBeanAs(InteractionAddedEvent(InteractionId(), contactId, facebookContact, expectedScore))
-                                .with("interactionId", validInteractionId))))
-                .expectResultMessagePayloadMatching(validInteractionId)
+                        sameBeanAs(InteractionAddedEvent(interactionId, contactId, facebookContact, expectedScore)))))
+                .expectResultMessagePayload(interactionId)
     }
 }
