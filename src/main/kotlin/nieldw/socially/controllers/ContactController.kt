@@ -9,8 +9,10 @@ import nieldw.socially.domain.queries.TopRelationshipBasicInfoQuery
 import nieldw.socially.web.rest.ContactDTO
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
+@Profile("rest")
 @Component
 class ContactController(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
     fun getContactById(contactId: ContactId): BasicInfoProjection =

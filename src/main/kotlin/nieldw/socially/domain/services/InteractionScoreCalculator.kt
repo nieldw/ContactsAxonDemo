@@ -4,8 +4,10 @@ import nieldw.socially.domain.InteractionScore
 import nieldw.socially.domain.UnknownPlatformException
 import nieldw.socially.domain.platform.PlatformContact
 import nieldw.socially.domain.platform.PlatformType
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
+@Profile("command")
 @Component
 class InteractionScoreCalculator {
     private val scoreMap = mapOf(

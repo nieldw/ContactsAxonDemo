@@ -8,14 +8,17 @@ import nieldw.socially.domain.queries.TopRelationshipBasicInfoQuery
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Profile
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
+@Profile("query")
 internal interface ContactRelationshipLevelRepo : CrudRepository<ContactRelationshipLevelProjection, UUID> {
     fun findTopByOrderByInteractionScoreDesc(): Optional<ContactRelationshipLevelProjection>
 }
 
+@Profile("query")
 @Repository
 internal class TopRelationshipBasicInfoQueryHandler(private val repo: ContactRelationshipLevelRepo) {
     private val logger = LoggerFactory.getLogger(this::class.java)

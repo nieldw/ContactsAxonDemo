@@ -2,6 +2,7 @@ package nieldw.socially.web.rest
 
 import nieldw.socially.controllers.InteractionController
 import nieldw.socially.domain.ContactId
+import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+@Profile("rest")
 @RestController
 internal class InteractionResources(private val interactionController: InteractionController) {
 

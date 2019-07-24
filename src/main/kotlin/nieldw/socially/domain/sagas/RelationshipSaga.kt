@@ -9,7 +9,9 @@ import org.axonframework.modelling.saga.SagaEventHandler
 import org.axonframework.modelling.saga.StartSaga
 import org.axonframework.spring.stereotype.Saga
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 
+@Profile("command")
 @Saga
 class RelationshipSaga {
 
